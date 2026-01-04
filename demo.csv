@@ -1,0 +1,6 @@
+Patient_ID,Name,DOB,Sex,Race_Ethnicity,Address,City,State,ZIP,Guardian_Name,Insurance_Type
+P001,Alex Morgan,2008-02-11,M,White,"12 Oak Street",Denver,CO,80205,Karen Morgan,Private
+P002,Jamie Lee,2009-06-19,F,Asian,"44 Maple Ave",Seattle,WA,98105,Ben Lee,Medicaid
+P003,Taylor Young,2007-11-30,F,"Black/African American","98 Pine Drive",Atlanta,GA,30312,Sandra Young,Private
+P004,Riley Smith,2010-04-13,M,Hispanic/Latino,"6 Birch Road",Phoenix,AZ,85006,Maria Smith,Medicaid
+P005,Jordan Cruz,2006-09-05,M,Hispanic/Latino,"21 Cedar Lane",Austin,TX,78702,Daniel Cruz,Private

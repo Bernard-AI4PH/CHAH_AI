@@ -1,0 +1,11 @@
+Patient_ID,Name,DOB,Diagnosis,Care_Plan_Start,Care_Plan_Goals,Session_Date,Provider,Session_Notes,Progress_Score
+P001,Alex Morgan,2008-02-11,Type 1 Diabetes,2024-01-10,"Improve glucose tracking; reduce HbA1c",2024-01-24,Dr. Patel,"Reviewed glucose logs; adjusted insulin ratio slightly.",6
+P001,Alex Morgan,2008-02-11,Type 1 Diabetes,2024-01-10,"Improve glucose tracking; reduce HbA1c",2024-02-14,Nurse Johnson,"Discussed diet habits; encouraged consistent carb counting.",7
+P002,Jamie Lee,2009-06-19,Asthma,2024-02-02,"Reduce ER visits; improve inhaler use",2024-02-09,Dr. Hernandez,"Assessed inhaler technique; added spacer training.",5
+P002,Jamie Lee,2009-06-19,Asthma,2024-02-02,"Reduce ER visits; improve inhaler use",2024-02-23,Dr. Hernandez,"Symptoms improving; reinforced rescue plan steps.",6
+P003,Taylor Young,2007-11-30,"Depression (mild)",2024-03-01,"Increase coping skills; reduce symptoms",2024-03-08,Counselor Ray,"Focused on positive coping strategies; introduced journaling.",5
+P003,Taylor Young,2007-11-30,"Depression (mild)",2024-03-01,"Increase coping skills; reduce symptoms",2024-03-22,Counselor Ray,"Reflected on progress; encouraged scheduling pleasant activities.",6
+P004,Riley Smith,2010-04-13,ADHD,2024-01-15,"Increase classroom focus; structure tasks",2024-01-29,Dr. Chang,"Discussed behavioral strategies; recommended planner usage.",4
+P004,Riley Smith,2010-04-13,ADHD,2024-01-15,"Increase classroom focus; structure tasks",2024-02-12,Dr. Chang,"Teacher feedback improved; reinforced reward system routine.",6
+P005,Jordan Cruz,2006-09-05,"Obesity (pediatric)",2024-02-12,"Improve diet; increase physical activity",2024-02-26,Dietitian Kim,"Reviewed food diary; set weekly step target.",5
+P005,Jordan Cruz,2006-09-05,"Obesity (pediatric)",2024-02-12,"Improve diet; increase physical activity",2024-03-11,Dietitian Kim,"Noted small improvements; encouraged family meal planning.",6
