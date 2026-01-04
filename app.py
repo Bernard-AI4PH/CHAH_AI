@@ -1,86 +1,67 @@
-# app.py
 import os
-from flask import Flask, request, render_template, send_from_directory, send_file, jsonify
+import tempfile
+from flask import Flask, send_file, jsonify
+from flask_cors import CORS
 
 from engine import generate_transition_report_pdf
 
 app = Flask(__name__)
 
+# For initial testing: allow all origins. Tighten later if needed.
+CORS(app)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-REPORT_DIR = os.path.join(BASE_DIR, "reports")
-
-os.makedirs(REPORT_DIR, exist_ok=True)
+LOGO_PATH = os.path.join(BASE_DIR, "favicon.png")
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "HEAD"])
 def index():
-    """
-    Simple HTML UI:
-    - GET: show form asking for Patient_ID
-    - POST: generate PDF and show it embedded
-    """
-    pdf_filename = None
-    patient_id = None
-    error = None
-
-    if request.method == "POST":
-        patient_id = request.form.get("patient_id", "").strip()
-        if not patient_id:
-            error = "Patient_ID is required."
-        else:
-            try:
-                pdf_filename = f"transition_report_{patient_id}.pdf"
-                pdf_path = os.path.join(REPORT_DIR, pdf_filename)
-                generate_transition_report_pdf(patient_id, pdf_path)
-            except ValueError as ve:
-                error = str(ve)
-                pdf_filename = None
-            except Exception as e:
-                error = f"Unexpected error: {e}"
-                pdf_filename = None
-
-    return render_template(
-        "index.html",
-        patient_id=patient_id,
-        pdf_filename=pdf_filename,
-        error=error,
+    # Render/load balancers commonly send HEAD / probes.
+    return (
+        jsonify(
+            {
+                "service": "CHAH Flask API",
+                "status": "running",
+                "endpoints": ["/health", "/api/report/<patient_id>"],
+            }
+        ),
+        200,
     )
 
 
-@app.route("/reports/<path:filename>")
-def serve_report(filename):
-    """
-    Serve a generated PDF from the /reports folder so HTML can embed it.
-    """
-    return send_from_directory(REPORT_DIR, filename)
+@app.get("/health")
+def health():
+    return jsonify({"status": "ok"}), 200
 
 
-@app.route("/api/report/<patient_id>", methods=["GET"])
-def api_generate_report(patient_id):
-    """
-    API endpoint:
-    - URL: /api/report/<patient_id>
-    - Returns PDF file directly (for other systems / Postman / etc.)
-    """
-    pdf_filename = f"transition_report_{patient_id}.pdf"
-    pdf_path = os.path.join(REPORT_DIR, pdf_filename)
-
+@app.get("/api/report/<patient_id>")
+def api_generate_report(patient_id: str):
     try:
-        generate_transition_report_pdf(patient_id, pdf_path)
+        # Render instances safely allow writing to /tmp.
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False, dir="/tmp") as tmp:
+            pdf_path = tmp.name
+
+        generate_transition_report_pdf(
+            patient_id=patient_id,
+            pdf_path=pdf_path,
+            logo_path=LOGO_PATH,  # uses your CHAH logo
+        )
+
+        # If you prefer a forced download, set as_attachment=True
+        return send_file(
+            pdf_path,
+            mimetype="application/pdf",
+            as_attachment=False,
+            download_name=f"transition_report_{patient_id}.pdf",
+        )
+
     except ValueError as ve:
-        # Patient not found / bad data
+        # engine.py raises ValueError for "patient not found" cases
         return jsonify({"error": str(ve)}), 404
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {e}"}), 500
 
-    return send_file(
-        pdf_path,
-        mimetype="application/pdf",
-        as_attachment=False,   # change to True if you want download instead of inline
-        download_name=pdf_filename,
-    )
-
 
 if __name__ == "__main__":
-    # For local testing
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", "5000"))
+    app.run(host="0.0.0.0", port=port, debug=True)
